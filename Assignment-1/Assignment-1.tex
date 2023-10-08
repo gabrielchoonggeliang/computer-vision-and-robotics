@@ -1,0 +1,98 @@
+\documentclass{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[margin=2cm]{geometry} % set margins to 2cm
+
+% Settings
+\setlength{\parskip}{\baselineskip}
+
+% Title
+\title{Assignment 1: 3D Object Measurement from Single Image}
+\author{
+  Gabriel Choong Ge Liang \\
+  AIT2204016 \\
+  }
+\date{\today}
+
+% Document
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+This report documents the findings of the focal length of a typical smartphone camera using the pinhole camera model. The focal length is found by measuring the dimensions of a known object in the image and using the pinhole camera model to calculate the focal length. The pinhole camera model is a simplified camera model that assumes a single point of light passing through a pinhole to form an image on the image plane.
+
+The experiment was carried out by taking 4 images of an object at different distances from the camera. The main object used is a wall, with a known height of 2m. The distance of the camera from the wall is measured using a measuring tape. The dimensions of the wall in the image is measured using the image editor GIMP. The focal length is then calculated using the pinhole camera model.
+
+The three experiments are:
+\begin{enumerate}
+  \item Calculate Focal Length of Camera using data from distance of 1m
+  \item Calculate the Length between the camera and the subject
+  \item Compute the error between different Lengths and explain the reason
+\end{enumerate}
+
+\section{Results and Interpretations}
+% BEGIN: xz45d9bcejpp
+\begin{table}[h]
+\centering
+  \begin{tabular}{|c|c|c|c|}
+  \hline
+
+  % [x, y, f]T = f / Z [X, Y, Z]T
+  % Z = distance between camera and object
+  % Assume that object is directly in front of the camera, i.e. no displacement in X and Y
+  % Then f = Z * y / Y <=> Z = f * Y / y
+  % Since Z is given, Y is given, and y is measured, f can be calculated
+  % L, H, h and f were used in the assignment instead of Y, y, Z and f respectively
+
+  Object Distance / L (m) & Object Height / H (m) & Image Height / h (px) & Focal Length / f (px)\\ \hline
+  1.0 (Landscape)     & 0.1             & 624            & 6420           \\ \hline
+  1.0                 & 2.0             & 6492           & 3246           \\ \hline
+  2.9429              & 2.0             & 2206           & 3246           \\ \hline
+  4.8018              & 2.0             & 1352           & 3246           \\ \hline
+  9.5471              & 2.0             & 680            & 3246           \\ \hline
+  \end{tabular}
+\caption{Measured distances and wall height}
+\label{tab:distances}
+\end{table}
+
+The table above shows the focal length obtained from the second row of the table. The remaining distances were calculated using the focal length obtained from the second row of the table. The focal length obtained from the second row of the table is 3246px.
+
+\newpage
+\begin{table}[h]
+\centering
+  \begin{tabular}{|c|c|c|c|}
+  \hline
+
+  Calculated Object Distance / $Z_{calculated}$(m) & Object Distance / $Z_{actual}$(m) & Error $\Delta Z$(m) \\ \hline
+  2.9429              & 3.0             & 0.0571            \\ \hline
+  4.8018              & 5.0             & 0.1982            \\ \hline
+  9.5471              & 10.0            & 0.4529            \\ \hline
+  \end{tabular}
+\caption{Error between calculated object distance and measured object distance}
+\label{tab:error}
+\end{table}
+
+This table shows the error between the calculated object distance and the measured object distance. The error increases as the object distance increases. The error seems to be proportional to the object distance.
+
+The error obtained in the table above is due to the assumption that the object is directly in front of the camera. This assumption is not true in reality. The object is not always directly in front of the camera, rather it could be slightly off to the side. This causes the error in the calculated object distance.
+
+Also, the camera was not attached to a tripod. This causes the camera to be slightly tilted. This causes the error in the calculated object distance.
+
+\subsection{Application}
+An application for this experiment is to measure the height of any object, given the distance between the camera and the object. For example, identifying the height of a person in a security camera footage.
+
+
+
+
+\section{Conclusion}
+The focal length of the camera is 3246px. The error between the calculated object distance and the measured object distance is proportional to the object distance. The error is due to the assumption that the object is directly in front of the camera and the camera is not attached to a tripod.
+
+
+\end{document}
