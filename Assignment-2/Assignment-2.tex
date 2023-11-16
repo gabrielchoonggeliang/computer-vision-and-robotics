@@ -1,0 +1,140 @@
+\documentclass{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[margin=2cm]{geometry} % set margins to 2cm
+
+% Settings
+\setlength{\parskip}{\baselineskip}
+
+% Title
+\title{Assignment 2: Calculation of Rotation Angles from Robot Ego-motion}
+\author{
+  Gabriel Choong Ge Liang \\
+  AIT2204016 \\
+  }
+\date{\today}
+
+% Document
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+This report documents the experiment of calculating the angle of rotation of the camera using quaternions.
+
+The experiment involved taking three pictures, each with a 10$^{\circ}$ rotation of the camera. The three pictures were then used to calculate the angle of rotation of the camera. A paper with three lines drawn on it, each with a 10$^{\circ}$ separation, was measured out precisely. The pictures were taken in a well-lit room to ensure that the images were clear and of high quality. The camera used was a phone camera with a focal length of $6420px$. The images were processed using GIMP. The data points were then imported into Python, and the angle of rotation was calculated using quaternions.
+
+The calculation of the angle of rotation was done using quaternions. Quaternions are a mathematical concept that extends the complex numbers. They are used to represent rotations in three-dimensional space. The quaternion representation of a rotation is unique and has several advantages over other representations, such as Euler angles. The quaternion representation is not subject to gimbal lock and is computationally efficient. The angle of rotation was then extracted from the quaternion representation. The results of the experiment are presented in the following section.
+
+\section{Results and Interpretations}
+% BEGIN: xz45d9bcejpp
+\begin{table}[h]
+\centering
+  \begin{tabular}{|c|c|c|c|}
+  \hline
+
+  X$_{base}$ (px) & Y$_{base}$ (px) & X$_{10^{\circ}}$ (px) & Y$_{10^{\circ}}$ (px)\\ \hline
+  1204 & 860 & 1764 & 912 \\ \hline
+  1208 & 2056 & 1748 & 2096 \\ \hline
+  1640 & 476 & 2176 & 528 \\ \hline
+  304 & 1204 & 940 & 1244 \\ \hline
+  1496 & 2064 & 2036 & 2112 \\ \hline
+  2540 & 872 & 3156 & 912 \\ \hline
+  300 & 1464 & 940 & 1480 \\ \hline
+  332 & 1552 & 948 & 1560 \\ \hline
+  \end{tabular}
+\caption{Base image and 10$^{\circ}$ rotated image}
+\label{tab:distances}
+\end{table}
+
+The table above are the data points used to calculate the angle of rotation of the base image and first image in quartenions.
+
+\newpage
+\begin{table}[h]
+\centering
+  \begin{tabular}{|c|c|c|c|}
+  \hline
+
+  X$_{10^{\circ}}$ (px) & Y$_{10^{\circ}}$ (px) & X$_{20^{\circ}}$ (px) & Y$_{20^{\circ}}$ (px)\\ \hline
+  1764 & 908 & 2248 & 936 \\ \hline
+  1752 & 2096 & 2240 & 2116 \\ \hline
+  3156  & 912 & 3764 & 924 \\ \hline
+  3100 & 452 & 3716 & 428 \\ \hline
+  2184 & 508 & 2700 & 532 \\ \hline
+  360 & 1020 & 980 & 1048 \\ \hline
+  444 & 1520 & 1052 & 1508 \\ \hline
+  2368 & 376 & 2896 & 376 \\ \hline
+  \end{tabular}
+\caption{10$^{\circ}$ rotated image and 20$^{\circ}$ rotated image}
+\label{tab:error}
+\end{table}
+
+The table above are the data points used to calculate the angle of rotation of the first image and second image in quartenions.
+
+\subsection{Calculations}
+
+The following calculations were done in Python, using the formulae provided in the lecture notes.
+
+The vectors are first normalised to unit vectors,
+
+$$P = (x, y, f)$$
+
+$$m = \frac{P}{||P||}$$
+
+This was done after ensuring the image center is
+
+$$(0, 0, f)$$
+
+A matrix $K_{3x3}$ is then constructed using the outer product of the vectors,
+
+$$K = \sum_{i}^N m_{i}m_{i}'^{T}$$
+
+Then, the quartenion matrix $\hat{K}$ is constructed,
+
+$$
+\hat{K} = 
+\begin{pmatrix}
+  K_{11} + K_{22} + K_{33} & K_{32} - K_{23} & K_{13} - K_{31} & K_{21} - K_{12} \\
+  K_{32} - K_{23} & K_{11} - K_{22} - K_{33} & K_{12} + K_{21} & K_{31} + K_{13} \\
+  K_{13} - K_{31} & K_{12} + K_{21} & -K_{11} + K_{22} - K_{33} & K_{23} + K_{32} \\
+  K_{21} - K_{12} & K_{31} + K_{13} & K_{23} + K_{32} & -K_{11} - K_{22} + K_{33} \\
+\end{pmatrix}
+$$
+
+The eigenvalues of $\hat{K}$ are then calculated, using the numpy.linalg.eig function. The eigenvalues are then sorted in descending order. The eigenvector corresponding to the largest eigenvalue is then extracted.
+
+\subsection{Results}
+
+The results of the calculations are as follows,
+
+$$\mathbf{q}_{0} = -0.998$$ 
+$$\mathbf{q'}_{0} = -0.991$$ 
+
+\section{Conclusion}
+The results of the experiment aligns with the expected results. This can be shown by applying
+
+$$
+\theta = 2\cos^{-1}(\mathbf{q}_{0})
+$$
+
+$$
+\mathbf{angle\ of\ rotation} = 360^{\circ} - \theta
+$$
+
+which is derived from,
+
+$$
+s = \mathbf{q}_{0} = \cos(\frac{\theta}{2})
+$$
+
+the result appears to be the negative of the output of this formula, when the angle of rotation is 10$^{\circ}$. This is because the rotation axis was flipped, where the direction of rotation was also flipped.
+
+Thus, we can conclude that the formulae used to convert vector points into quartenions, then eigen decompose the quartenion matrix to obtain the angle of rotation is correct.
+
+\end{document}
