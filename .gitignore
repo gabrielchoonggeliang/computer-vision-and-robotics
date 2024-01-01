@@ -6,3 +6,7 @@
 # Generated files
 *.pdf
 .DS_Store
+
+# Images
+*.jpg
+*.heic
